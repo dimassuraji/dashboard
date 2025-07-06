@@ -1,0 +1,731 @@
+<%- include('../partials/header') %>
+<style>
+  .bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+  }
+
+  @media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+      font-size: 3.5rem;
+    }
+  }
+
+  .b-example-divider {
+    width: 100%;
+    height: 3rem;
+    background-color: rgba(0, 0, 0, 0.1);
+    border: solid rgba(0, 0, 0, 0.15);
+    border-width: 1px 0;
+    box-shadow: inset 0 0.5em 1.5em rgba(0, 0, 0, 0.1),
+      inset 0 0.125em 0.5em rgba(0, 0, 0, 0.15);
+  }
+
+  .b-example-vr {
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 100vh;
+  }
+
+  .bi {
+    vertical-align: -0.125em;
+    fill: currentColor;
+  }
+
+  .nav-scroller {
+    position: relative;
+    z-index: 2;
+    height: 2.75rem;
+    overflow-y: hidden;
+  }
+
+  .nav-scroller .nav {
+    display: flex;
+    flex-wrap: nowrap;
+    padding-bottom: 1rem;
+    margin-top: -1px;
+    overflow-x: auto;
+    text-align: center;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .btn-bd-primary {
+    --bd-violet-bg: #712cf9;
+    --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+
+    --bs-btn-font-weight: 600;
+    --bs-btn-color: var(--bs-white);
+    --bs-btn-bg: var(--bd-violet-bg);
+    --bs-btn-border-color: var(--bd-violet-bg);
+    --bs-btn-hover-color: var(--bs-white);
+    --bs-btn-hover-bg: #6528e0;
+    --bs-btn-hover-border-color: #6528e0;
+    --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+    --bs-btn-active-color: var(--bs-btn-hover-color);
+    --bs-btn-active-bg: #5a23c8;
+    --bs-btn-active-border-color: #5a23c8;
+  }
+
+  .bd-mode-toggle {
+    z-index: 1500;
+  }
+
+  .bd-mode-toggle .bi {
+    width: 1em;
+    height: 1em;
+  }
+
+  .bd-mode-toggle .dropdown-menu .active .bi {
+    display: block !important;
+  }
+
+  #system-notice {
+    position: fixed;
+    bottom: 80px;
+    left: 10px;
+    background-color: #d4edda;
+    color: #155724;
+    padding: 6px 12px;
+    border-left: 6px solid #28a745;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    display: none;
+    font-size: 12px; /* Diperkecil */
+    font-weight: 500;
+  }
+
+  #system-notice.show {
+    display: block !important;
+  }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+
+<header
+  class="navbar sticky-top bg-dark flex-md-nowrap p-0 shadow"
+  data-bs-theme="dark"
+>
+  <a
+    class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 text-white"
+    href="https://web.polines.ac.id/id/"
+    >Politeknik Negeri Semarang</a
+  >
+  <ul class="navbar-nav flex-row d-md-none">
+    <li class="nav-item text-nowrap">
+      <button
+        class="nav-link px-3 text-white"
+        type="button"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#sidebarMenu"
+        aria-controls="sidebarMenu"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <i class="bi bi-list"></i>
+      </button>
+    </li>
+  </ul>
+</header>
+
+<div class="container-fluid">
+  <div class="row flex-nowrap">
+    <div
+      class="sidebar border border-right col-md-3 col-lg-2 p-2 bg-body-tertiary"
+    >
+      <div
+        class="offcanvas-md offcanvas-end bg-body-tertiary"
+        tabindex="-1"
+        id="sidebarMenu"
+        aria-labelledby="sidebarMenuLabel"
+      >
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="sidebarMenuLabel">Polines</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="offcanvas"
+            data-bs-target="#sidebarMenu"
+            aria-label="Close"
+          ></button>
+        </div>
+        <form id="control-form">
+          <div class="offcanvas-body d-md-flex flex-column p-2 pt-lg-3">
+            <div class="mb-3">
+              <label for="mode-kontrol" class="form-label">Control Mode</label>
+              <div id="mode-kontrol" class="dropdown w-100">
+                <button
+                  class="btn btn-primary dropdown-toggle w-100"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Select Mode
+                </button>
+                <ul class="dropdown-menu w-100">
+                  <li>
+                    <p class="dropdown-item">Select Mode</p>
+                  </li>
+                  <li>
+                    <p class="dropdown-item">Satu Posisi</p>
+                  </li>
+                  <li>
+                    <p class="dropdown-item">Dua Posisi</p>
+                  </li>
+                  <li>
+                    <p class="dropdown-item">P</p>
+                  </li>
+                  <li>
+                    <p class="dropdown-item">PD</p>
+                  </li>
+                  <li>
+                    <p class="dropdown-item">PID</p>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="Kp" class="form-label">Kp :</label>
+              <input
+                type="number"
+                min="0"
+                class="form-control"
+                id="Kp"
+                name="kp"
+                placeholder="Enter Kp"
+                step="0.000001"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="Ki" class="form-label">Ki :</label>
+              <input
+                type="number"
+                min="0"
+                class="form-control"
+                id="Ki"
+                name="ki"
+                placeholder="Enter Ki"
+                step="0.000001"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="Kd" class="form-label">Kd :</label>
+              <input
+                type="number"
+                min="0"
+                class="form-control"
+                id="Kd"
+                name="kd"
+                placeholder="Enter Kd"
+                step="0.000001"
+              />
+            </div>
+
+            <div class="mb-3">
+              <label for="SetPoint" class="form-label">Setpoint :</label>
+              <input
+                type="number"
+                min="0"
+                class="form-control"
+                id="SetPoint"
+                name="setpoint"
+                placeholder="Enter Setpoint"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="SetPoint2" class="form-label hidden"
+                >Setpoint 2:</label
+              >
+              <input
+                type="number"
+                min="0"
+                class="form-control hidden"
+                id="SetPoint2"
+                name="setpoint2"
+                placeholder="Enter Setpoint 2"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="timesampling" class="form-label"
+                >Duration (ms) :</label
+              >
+              <input
+                type="number"
+                min="0"
+                class="form-control"
+                id="timesampling"
+                name="timesampling"
+                placeholder="Enter Duration"
+              />
+            </div>
+
+            <div
+              class="btn-group"
+              role="group"
+              aria-label="Basic mixed styles example"
+            >
+              <button type="submit" class="btn btn-success">Start</button>
+              <button type="clear" class="btn btn-warning">Clear</button>
+              <button type="button" class="btn btn-danger">Clear All</button>
+            </div>
+
+            <div
+              id="status-alert"
+              class="alert alert-info d-none"
+              role="alert"
+            ></div>
+            <div
+              id="system-notice"
+              class="alert alert-success d-none"
+              role="alert"
+            >
+              ✅ System Connected
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- perbaikan -->
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <div
+        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+      >
+        <h4 class="h4">Dashboard Kendali Kecepatan Motor DC</h4>
+        <div class="btn-toolbar mb-2 mb-md-0 gap-2">
+          <div class="btn-group me-2">
+            <button id="exportBtn" class="btn btn-sm btn-outline-dark">
+              Export
+            </button>
+          </div>
+          <button id="logout" class="btn btn-danger">Logout</button>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <!-- <canvas id="rpmChart" style="height: 770px; width: 100%"></canvas> -->
+          <div
+            class="position-relative"
+            style="min-height: 300px; height: 77vh"
+          >
+            <canvas id="rpmChart" style="width: 100%; height: 100%"></canvas>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function () {
+    // Hide PID-related inputs initially
+    $("#Kp, #Ki, #Kd, #SetPoint2").closest(".mb-3").hide();
+
+    // Disable form inputs initially
+    $("#control-form input").prop("disabled", true);
+    $("#control-form button").not(".dropdown-toggle").prop("disabled", true);
+
+    // When a mode is selected from the dropdown
+    $(".dropdown-item").click(function () {
+      var selectedMode = $(this).text().trim();
+      var modeButton = $(".dropdown-toggle");
+
+      if (selectedMode === "Select Mode") {
+        modeButton.text("Select Mode");
+        $("#Kp, #Ki, #Kd, #SetPoint2").closest(".mb-3").hide();
+        $("#control-form input").prop("disabled", true);
+        $("#control-form button")
+          .not(".dropdown-toggle")
+          .prop("disabled", true);
+        return;
+      }
+
+      modeButton.text(selectedMode);
+      $("#Kp, #Ki, #Kd, #SetPoint2").closest(".mb-3").hide();
+
+      if (selectedMode === "P") {
+        $("#Kp").closest(".mb-3").show();
+      } else if (selectedMode === "PD") {
+        $("#Kp, #Kd").closest(".mb-3").show();
+      } else if (selectedMode === "PID") {
+        $("#Kp, #Ki, #Kd").closest(".mb-3").show();
+      } else if (selectedMode === "Dua Posisi") {
+        $("#SetPoint2").closest(".mb-3").show();
+      }
+
+      $("#control-form input").prop("disabled", false);
+      $("#control-form button").not(".dropdown-toggle").prop("disabled", false);
+    });
+
+    $("#exportBtn").click(function () {
+      window.location.href = "/dashboard/export";
+    });
+
+    let waitingForModeActive = false;
+
+    // Form submission handler
+    $("#control-form").submit(function (e) {
+      e.preventDefault();
+
+      //validasi input
+      const selectedMode = $(".dropdown-toggle").text().trim();
+      if (selectedMode === "Select Mode") {
+        alert("Please select the control mode first!");
+        return;
+      }
+
+      let valid = true;
+      let messages = [];
+      if (selectedMode === "P") {
+        if (!$("#Kp").val()) {
+          valid = false;
+          messages.push("Kp variable must be filled!");
+        }
+      } else if (selectedMode === "PD") {
+        if (!$("#Kp").val()) {
+          valid = false;
+          messages.push("Kp variable must be filled!");
+        }
+        if (!$("#Kd").val()) {
+          valid = false;
+          messages.push("Kd variable must be filled!");
+        }
+      } else if (selectedMode === "PID") {
+        if (!$("#Kp").val()) {
+          valid = false;
+          messages.push("Kp variable must be filled!");
+        }
+        if (!$("#Ki").val()) {
+          valid = false;
+          messages.push("Ki variable must be filled!");
+        }
+        if (!$("#Kd").val()) {
+          valid = false;
+          messages.push("Kd variable must be filled!");
+        }
+      } else if (selectedMode === "Dua Posisi") {
+        if (!$("#SetPoint2").val()) {
+          valid = false;
+          messages.push("Setpoint 2 is required!");
+        }
+      }
+      if (!$("#SetPoint").val()) {
+        valid = false;
+        messages.push("Setpoint is required!");
+      }
+      if (!$("#timesampling").val()) {
+        valid = false;
+        messages.push("Duration is required!");
+      }
+
+      if (!valid) {
+        alert(messages.join("\n"));
+        return;
+      }
+
+      const formData = {
+        mode: $(".dropdown-toggle").text() || null,
+        kp: $("#Kp").val() || null,
+        ki: $("#Ki").val() || null,
+        kd: $("#Kd").val() || null,
+        set_point: $("#SetPoint").val() || null,
+        set_point2: $("#SetPoint2").val() || null,
+        time_sampling: $("#timesampling").val() || null,
+      };
+
+      // POST to /dashboard
+      $.ajax({
+        type: "POST",
+        url: "/dashboard",
+        data: formData,
+        success: function (response) {
+          console.log("Success:", response);
+          alert("Control parameter sent successfully");
+          waitingForModeActive = true; // Aktifkan flag untuk tunggu MQTT
+        },
+        error: function (xhr, status, error) {
+          console.error("Error:", error);
+          alert("Error sending control parameters!");
+        },
+      });
+    });
+    // Warning (clear aja) button handler
+    $(".btn-warning").on("click", function (e) {
+      e.preventDefault(); // Menghentikan event default (misal: submit form)
+      e.stopPropagation(); // Menghentikan event bubbling agar event tidak naik ke parent
+
+      $(".btn-group button")
+        .not(".dropdown-toggle, .btn-success, .btn-warning, .btn-danger")
+        .prop("disabled", true);
+      // Clear chart data
+      rpmChart.data.labels = []; // Clear time labels
+      rpmChart.data.datasets.forEach((dataset) => {
+        dataset.data = []; // Clear dataset values
+      });
+      rpmChart.update(); // Update the chart
+
+      // Sembunyikan notifikasi status
+      $("#status-alert").addClass("d-none").removeClass("show");
+      // Reset flag (opsional, jika sedang menunggu mode_active)
+      waitingForModeActive = false;
+
+      // Enable tombol Export
+      $("#exportBtn").prop("disabled", false);
+      // Tambahkan ini untuk clear database/output
+      $.ajax({
+        url: "/dashboard/clear-data",
+        type: "DELETE",
+        success: function (resp) {
+          alert("Clear Graph and Export data successfully.");
+        },
+        error: function (xhr) {
+          alert(
+            "Gagal menghapus data output: " +
+              (xhr.responseJSON?.message || xhr.status)
+          );
+        },
+      });
+    });
+
+    // Clear button handler
+    $(".btn-danger").click(function () {
+      $("#control-form")[0].reset();
+      $(".dropdown-toggle").text("Select Mode");
+      $("#Kp, #Ki, #Kd").closest(".mb-3").hide();
+      $("#control-form input").prop("disabled", true);
+      $(".btn-group button").not(".dropdown-toggle").prop("disabled", true);
+
+      // Clear chart data
+      rpmChart.data.labels = []; // Clear time labels
+      rpmChart.data.datasets.forEach((dataset) => {
+        dataset.data = []; // Clear dataset values
+      });
+      rpmChart.update(); // Update the chart
+
+      // Sembunyikan notifikasi status\
+      $("#status-alert").addClass("d-none").removeClass("show");
+
+      // Reset flag (opsional, jika sedang menunggu mode_active)
+      waitingForModeActive = false;
+
+      // Enable tombol Export
+      $("#exportBtn").prop("disabled", false);
+
+      // Tambahkan ini untuk clear database/output
+      $.ajax({
+        url: "/dashboard/clear-data",
+        type: "DELETE",
+        success: function (resp) {
+          alert(
+            "The form has been successfully deleted. Output and export data have also been removed. Please select a control mode to proceed."
+          );
+        },
+        error: function (xhr) {
+          alert(
+            "Gagal menghapus data output: " +
+              (xhr.responseJSON?.message || xhr.status)
+          );
+        },
+      });
+    });
+
+    // Logout button handler
+    $("#logout").click(function () {
+      $.post("/logout", function (response) {
+        console.log("Logout command sent:", response);
+        alert("Logged out successfully!");
+        window.location.href = "/";
+      }).fail(function (xhr, status, error) {
+        console.error("Logout failed:", error);
+        alert("Error during logout. Please try again.");
+      });
+    });
+  });
+
+  // Initialize an empty chart
+  const mqttOptions = {
+    username: "dimas",
+    password: "TaEKD2025",
+    clientId: "client_" + Math.random().toString(16).substr(2, 8),
+  };
+
+  const brokerUrl =
+    "wss://3107ee96d14c4007908cdd3e772e6600.s1.eu.hivemq.cloud:8884/mqtt"; // WebSocket URL
+  const mqttClient = mqtt.connect(brokerUrl, mqttOptions);
+
+  mqttClient.on("connect", () => {
+    console.log("Connected to MQTT broker");
+    mqttClient.subscribe("RPM/output/#", (err) => {
+      if (err) {
+        console.error("Subscribe error:", err);
+      } else {
+        console.log("Subscribed to RPM/output/#");
+      }
+    });
+    mqttClient.subscribe("RPM/status/#", (err) => {
+      if (err) {
+        console.error("Subscribe error:", err);
+      } else {
+        console.log("Subscribed to RPM/status/#");
+      }
+    });
+    mqttClient.subscribe("system/#", (err) => {
+      if (err) {
+        console.error("Subscribe error:", err);
+      } else {
+        console.log("Subscribed to system/#");
+      }
+    });
+  });
+
+  const ctx = document.getElementById("rpmChart").getContext("2d");
+  const rpmChart = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: [], // Time labels
+      datasets: [
+        {
+          label: "Set Point 1 (RPM)",
+          data: [],
+          borderColor: "rgba(75, 192, 192, 1)",
+          backgroundColor: "rgba(75, 192, 192, 0.2)",
+          borderWidth: 6,
+          pointRadius: 0, // Hilangkan titik
+          tension: 0.3, // Opsional: membuat garis agak halus (smooth)
+        },
+        {
+          label: "Set Point 2 (RPM)",
+          data: [],
+          borderColor: "rgba(255, 99, 132, 1)",
+          backgroundColor: "rgba(255, 99, 132, 0.2)",
+          borderWidth: 6,
+          pointRadius: 0,
+          tension: 0.3,
+        },
+        {
+          label: "Output (RPM)",
+          data: [],
+          borderColor: "rgba(54, 162, 235, 1)",
+          backgroundColor: "rgba(54, 162, 235, 0.2)",
+          borderWidth: 6,
+          pointRadius: 0,
+          tension: 0.3,
+        },
+      ],
+    },
+    options: {
+      // animation: {
+      //   //pembaruan animasi
+      //   duration: 0, // cepat dan tidak terlalu mengganggu
+      //   easing: "linear", //Kecepatan konstan
+      // },
+      responsive: true,
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: "Time",
+          },
+        },
+        y: {
+          title: {
+            display: true,
+            text: "RPM",
+          },
+        },
+      },
+    },
+  });
+
+  const loggedInUser = "<%= user.nama_pengguna %>";
+  console.log("Logged in as:", loggedInUser);
+  // Update chart with new data in MQTT message handler
+  mqttClient.on("message", (topic, message) => {
+    if (topic.startsWith("RPM/output/")) {
+      try {
+        const data = JSON.parse(message.toString());
+        console.log("Received data:", data); // Debugging line
+
+        if (data.nama_pengguna !== loggedInUser) return;
+        const rpmValue = data.RPM;
+
+        // Assuming you have set points stored
+        const setPoint1 = parseFloat($("#SetPoint").val()) || 0;
+        const setPoint2 = parseFloat($("#SetPoint2").val()) || 0;
+        const currentTime = data.t; // Use 't' from JSON
+        //const currentTime = new Date().toLocaleTimeString(); // Get current time
+
+        console.log(
+          "Set Point 1:",
+          setPoint1,
+          "Set Point 2:",
+          setPoint2,
+          "RPM Value:",
+          rpmValue
+        ); // Debugging line
+        // Push new data to the chart
+        rpmChart.data.labels.push(currentTime);
+        rpmChart.data.datasets[0].data.push(setPoint1);
+        rpmChart.data.datasets[1].data.push(setPoint2);
+        rpmChart.data.datasets[2].data.push(rpmValue);
+        rpmChart.update();
+      } catch (e) {
+        console.error("Error parsing RPM data:", e);
+      }
+    }
+    // === Handler untuk notifikasi mode aktif ===
+    if (topic.startsWith("RPM/status/")) {
+      try {
+        const statusData = JSON.parse(message.toString());
+
+        if (statusData.notice === "mode_active") {
+          const time = statusData.time || new Date().toLocaleTimeString();
+          const user = statusData.user || "unknown user";
+
+          const noticeText = `Mode aktif oleh ${user} pada ${time}`;
+          $("#status-alert")
+            .removeClass("d-none")
+            .addClass("show")
+            .text(noticeText);
+
+          if (waitingForModeActive) {
+            alert(`Kontrol dimulai: ${noticeText}`);
+            waitingForModeActive = false; // Reset flag
+          }
+
+          // Hilangkan setelah 5 detik (opsional)
+          setTimeout(() => {
+            $("#status-alert").addClass("d-none").removeClass("show");
+          }, 5000);
+        }
+      } catch (e) {
+        console.error("Error parsing status data:", e);
+      }
+    }
+
+    if (topic.startsWith("system/")) {
+      try {
+        const sysData = JSON.parse(message.toString());
+        if (sysData.status === "System Connected") {
+          const time = new Date().toLocaleTimeString();
+
+          $("#system-notice")
+            .removeClass("d-none")
+            .addClass("show")
+            .text(`✅ ${sysData.status} at ${time}`);
+
+          // Auto-hide after 5 seconds
+        }
+      } catch (e) {
+        console.error("Error parsing system status:", e);
+      }
+    }
+  });
+</script>
+
+<%- include('../partials/footer') %>
