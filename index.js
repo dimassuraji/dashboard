@@ -45,6 +45,7 @@ app.use(
     secret: process.env.SECRETKEY,
     resave: false,
     saveUninitialized: true,
+    store: undefined, // Use default memory store
   })
 );
 
