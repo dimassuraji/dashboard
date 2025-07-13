@@ -56,7 +56,6 @@
   .btn-bd-primary {
     --bd-violet-bg: #712cf9;
     --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
-
     --bs-btn-font-weight: 600;
     --bs-btn-color: var(--bs-white);
     --bs-btn-bg: var(--bd-violet-bg);
@@ -95,12 +94,92 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     z-index: 9999;
     display: none;
-    font-size: 12px; /* Diperkecil */
+    font-size: 12px;
     font-weight: 500;
   }
 
   #system-notice.show {
     display: block !important;
+  }
+
+  /* --- Tambahan untuk responsif --- */
+  @media (max-width: 767.98px) {
+    .sidebar {
+      position: fixed;
+      z-index: 1040;
+      width: 80vw !important;
+      max-width: 320px;
+      min-width: 200px;
+      left: 0;
+      top: 56px; /* tinggi navbar */
+      bottom: 0;
+      height: auto !important;
+      border-right: 1px solid #ddd;
+      background: #fff;
+      padding-bottom: 2rem;
+      overflow-y: auto;
+      transition: left 0.2s;
+    }
+    main.col-md-9 {
+      padding: 1rem 0.5rem !important;
+    }
+    .offcanvas-md {
+      position: relative !important;
+      width: 100vw !important;
+      max-width: 100vw !important;
+      background: #f8f9fa;
+      border: none;
+    }
+    .navbar-brand {
+      font-size: 1rem;
+      padding-left: 0.5rem;
+    }
+    .btn-toolbar {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
+
+  @media (max-width: 767.98px) {
+    #rpmChart {
+      min-height: 220px !important;
+      max-height: 45vh !important;
+    }
+    .position-relative {
+      min-height: 220px !important;
+      height: 45vh !important;
+    }
+  }
+
+  @media (max-width: 575.98px) {
+    .form-control,
+    .dropdown-toggle,
+    .btn-group,
+    .btn {
+      font-size: 0.95rem !important;
+      padding: 0.4rem 0.7rem !important;
+    }
+    .btn-group {
+      flex-direction: column;
+      width: 100%;
+      gap: 0.4rem;
+    }
+    .btn-group .btn {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 991.98px) {
+    .sidebar {
+      min-width: 0 !important;
+      width: 100% !important;
+      position: static !important;
+      border-right: none;
+      border-bottom: 1px solid #eee;
+    }
+    .row.flex-nowrap {
+      flex-wrap: wrap !important;
+    }
   }
 </style>
 
