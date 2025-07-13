@@ -556,7 +556,7 @@
   };
 
   const brokerUrl =
-    "mqtts://3107ee96d14c4007908cdd3e772e6600.s1.eu.hivemq.cloud:8883"; // WebSocket URL
+    "wss://3107ee96d14c4007908cdd3e772e6600.s1.eu.hivemq.cloud:8884/mqtt"; // WebSocket URL
   const mqttClient = mqtt.connect(brokerUrl, mqttOptions);
 
   mqttClient.on("connect", () => {
