@@ -15,7 +15,10 @@ const brokerUrl =
   "mqtts://3107ee96d14c4007908cdd3e772e6600.s1.eu.hivemq.cloud:8883";
 const mqttClient = mqtt.connect(brokerUrl, mqttOptions);
 
-// Penanganan koneksi MQTT
+console.log("MQTT_USERNAME:", process.env.MQTT_USERNAME);
+console.log("MQTT_PASSWORD:", process.env.MQTT_PASSWORD);
+
+// Handle MQTT connection
 mqttClient.on("connect", () => {
   console.log("Connected to MQTT broker");
 
@@ -27,10 +30,16 @@ mqttClient.on("connect", () => {
     }
   });
 });
-console.log("MQTT_USERNAME:", process.env.MQTT_USERNAME);
-console.log("MQTT_PASSWORD:", process.env.MQTT_PASSWORD);
-mqttClient.on("error", (err) => console.error("MQTT error:", err));
+
+// Handle MQTT errors (prevent exit)
+mqttClient.on("error", (err) => {
+  console.error("MQTT error:", err.message || err);
+  // Do not exit the app, just log the error and try reconnect
+});
+
+// Additional MQTT event handlers
 mqttClient.on("offline", () => console.error("MQTT client offline"));
 mqttClient.on("close", () => console.log("MQTT connection closed"));
 
+// Export the client for use in other modules
 module.exports = mqttClient;
