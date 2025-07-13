@@ -9,8 +9,7 @@ const mqttOptions = {
   connectTimeout: 5000,
 };
 
-const brokerUrl =
-  "https://3107ee96d14c4007908cdd3e772e6600.s1.eu.hivemq.cloud:8883";
+const brokerUrl = "3107ee96d14c4007908cdd3e772e6600.s1.eu.hivemq.cloud:8883";
 const mqttClient = mqtt.connect(brokerUrl, mqttOptions);
 
 // Penanganan koneksi MQTT
