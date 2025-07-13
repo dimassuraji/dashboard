@@ -25,6 +25,8 @@ mqttClient.on("connect", () => {
     }
   });
 });
+console.log("MQTT_USERNAME:", process.env.MQTT_USERNAME);
+console.log("MQTT_PASSWORD:", process.env.MQTT_PASSWORD);
 
 mqttClient.on("error", (err) => console.error("MQTT error:", err));
 mqttClient.on("offline", () => console.error("MQTT client offline"));
