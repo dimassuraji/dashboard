@@ -271,7 +271,9 @@
             >
               <button type="submit" class="btn btn-success">Start</button>
               <button type="clear" class="btn btn-warning">Clear</button>
-              <button type="button" class="btn btn-danger">Clear All</button>
+              <button type="button" id="clearall" class="btn btn-danger">
+                Clear All
+              </button>
             </div>
 
             <div
@@ -493,7 +495,7 @@
     });
 
     // Clear button handler
-    $(".btn-danger").click(function () {
+    $("#clearall").click(function () {
       $("#control-form")[0].reset();
       $(".dropdown-toggle").text("Select Mode");
       $("#Kp, #Ki, #Kd").closest(".mb-3").hide();
