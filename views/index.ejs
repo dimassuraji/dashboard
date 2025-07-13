@@ -13,23 +13,34 @@
     font-family: "Poppins", sans-serif;
     min-height: 100vh;
   }
-  /* 
-  .card {
-    border: 1px solid #ccc;
-    border-radius: 20px;
-    padding: 40px;
-    background-color: #ffffff;
-    box-shadow: 10px 20px 20px rgba(0, 0, 0, 0.1);
-  } */
 
   .card {
-    border: 1px solid #e0e0e0;
-    border-radius: 16px;
+    border: 1px solid #ccc;
+    border-radius: 18px;
     padding: 32px;
-    background-color: #fff;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-    max-width: 380px;
+    background-color: #ffffff;
+    box-shadow: 10px 20px 20px rgba(0, 0, 0, 0.1);
+    max-width: 380px; /* lebar card */
+    width: 100%;
     margin: auto;
+  }
+
+  .center-screen {
+    min-height: 89vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    box-sizing: border-box;
+    overflow: auto;
+    width: 100%;
+  }
+
+  @media (max-width: 576px) {
+    .center-screen {
+      min-height: 100vh;
+      padding: 8px;
+    }
   }
 
   .btn-primary {
@@ -57,20 +68,20 @@
   }
 
   .logo {
-    max-height: 90px;
-    margin-bottom: 10px;
+    max-height: 105px;
+    margin-bottom: 2px;
   }
 
   h1 {
     color: #222;
     font-weight: 700;
-    font-size: 2rem;
+    font-size: 2.2rem;
   }
 </style>
-<div class="d-flex align-items-center justify-content-center min-vh-100">
+<div class="center-screen">
   <div class="container">
     <div class="row justify-content-center">
-      <div class="col-md-6 col-lg-4">
+      <div class="col-10 col-sm-8 col-md-6 col-lg-4">
         <div class="card p-4">
           <!-- Logo -->
           <div class="text-center mb-4">
