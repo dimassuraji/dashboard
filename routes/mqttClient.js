@@ -10,7 +10,7 @@ const mqttOptions = {
 };
 
 const brokerUrl =
-  "wss://3107ee96d14c4007908cdd3e772e6600.s1.eu.hivemq.cloud:8884/mqtt";
+  "mqtts://3107ee96d14c4007908cdd3e772e6600.s1.eu.hivemq.cloud:8883";
 const mqttClient = mqtt.connect(brokerUrl, mqttOptions);
 
 // Penanganan koneksi MQTT
