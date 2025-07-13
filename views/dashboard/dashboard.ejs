@@ -550,13 +550,13 @@
   // Initialize an empty chart
 
   const mqttOptions = {
-    username: dimas,
-    password: TaEKD2025,
+    username: "dimas",
+    password: "TaEKD2025",
     clientId: "mqtt_client_" + Math.random().toString(16).substr(2, 8),
   };
 
   const brokerUrl =
-    "wss://3107ee96d14c4007908cdd3e772e6600.s1.eu.hivemq.cloud:8884/mqtt"; // WebSocket URL
+    "wss://3107ee96d14c4007908cdd3e772e6600.s1.eu.hivemq.cloud:8884/mqtt"; // wss://3107ee96d14c4007908cdd3e772e6600.s1.eu.hivemq.cloud:8884/mqtt
   const mqttClient = mqtt.connect(brokerUrl, mqttOptions);
 
   mqttClient.on("connect", () => {
