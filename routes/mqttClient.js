@@ -12,7 +12,7 @@ const mqttOptions = {
 };
 
 const brokerUrl =
-  "mqtts://3107ee96d14c4007908cdd3e772e6600.s1.eu.hivemq.cloud/8883"; //wss://3107ee96d14c4007908cdd3e772e6600.s1.eu.hivemq.cloud:8884/mqtt
+  "wss://3107ee96d14c4007908cdd3e772e6600.s1.eu.hivemq.cloud:8884/mqtt"; //wss://3107ee96d14c4007908cdd3e772e6600.s1.eu.hivemq.cloud:8884/mqtt
 const mqttClient = mqtt.connect(brokerUrl, mqttOptions);
 
 console.log("MQTT_USERNAME:", process.env.MQTT_USERNAME);
